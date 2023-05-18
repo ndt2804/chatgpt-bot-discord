@@ -13,11 +13,15 @@ const client = new Client({
 
 
 client.on('messageCreate', async function (message) {
-    const chatId = message.author.id;       // ID của cuộc trò chuyện hiện tại
-    const chatMsg = message.content;
-    ChatGPTService.generateCompletion(chatMsg).then(responseMsg => {
-        message.reply(responseMsg)
-    });
+    try {
+        if (message.author.bot) return;
+        ChatGPTService.generateCompletion(message.content).then(responseMsg => {
+            message.reply(responseMsg)
+        });
+    } catch (err) {
+        console.log(err);
+    }
+
 });
 client.login(process.env.DISCORD_TOKEN)
 console.log('CHATGPT BOT')
